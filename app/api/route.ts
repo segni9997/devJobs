@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockJobs, filterJobs, addJob } from '@/lib/mock-data';
+import { db } from '@/lib/db';
 import { jobSchema } from '@/lib/validations';
 
 export async function GET(request: NextRequest) {
@@ -8,9 +8,23 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
     const type = searchParams.get('type');
     
-    const filteredJobs = filterJobs(mockJobs, { search: search || undefined, type: type || undefined });
+    const jobs = await db.job.findMany({
+      where: {
+        AND: [
+          search ? {
+            OR: [
+              { title: { contains: search, mode: 'insensitive' } },
+              { company: { contains: search, mode: 'insensitive' } },
+              { location: { contains: search, mode: 'insensitive' } },
+            ]
+          } : {},
+          type && type !== 'ALL' ? { type: type as any } : {},
+        ]
+      },
+      orderBy: { postedAt: 'desc' },
+    });
 
-    return NextResponse.json(filteredJobs);
+    return NextResponse.json(jobs);
   } catch (error) {
     console.error('Error fetching jobs:', error);
     return NextResponse.json(
@@ -25,11 +39,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = jobSchema.parse(body);
 
-    const job = addJob({
-      ...validatedData,
-      companyWebsite: validatedData.companyWebsite || undefined,
-      salary: validatedData.salary || undefined,
-      benefits: validatedData.benefits || undefined,
+    const job = await db.job.create({
+      data: {
+        ...validatedData,
+        companyWebsite: validatedData.companyWebsite || null,
+        salary: validatedData.salary || null,
+        benefits: validatedData.benefits || null,
+      },
     });
 
     return NextResponse.json(job, { status: 201 });
