@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getCompanyBySlug, getJobsByCompany } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import JobCard from '@/components/jobCard';
 import { 
@@ -135,7 +134,7 @@ export default function CompanyPage({ params }: CompanyPageProps) {
                       No open positions
                     </h3>
                     <p className="text-gray-600">
-                      This company doesn't have any job openings at the moment. 
+                      This company does not have any job openings at the moment. 
                       Check back later for new opportunities.
                     </p>
                   </CardContent>

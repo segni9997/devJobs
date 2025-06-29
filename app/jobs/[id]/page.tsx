@@ -12,7 +12,6 @@ import {
   Clock, 
   DollarSign, 
   Building2, 
-  Users, 
   Calendar,
   ExternalLink,
   Bookmark,
@@ -264,7 +263,7 @@ export default function JobPage({ params }: JobPageProps) {
                   <ExternalLink className="h-4 w-4 ml-2" />
                 </Button>
                 <p className="text-sm text-gray-600 text-center">
-                  You'll be redirected to the company's application page
+                  You will be redirected to the company&apos;s application page
                 </p>
               </CardContent>
             </Card>

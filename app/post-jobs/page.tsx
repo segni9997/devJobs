@@ -9,11 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { 
   PlusCircle, 
   X, 
-  Briefcase, 
   Building2, 
   MapPin, 
   DollarSign,
@@ -21,6 +19,7 @@ import {
   AlertCircle,
   Code
 } from 'lucide-react';
+import Link from 'next/link';
 
 interface JobFormData {
   title: string;
@@ -195,7 +194,7 @@ export default function PostJobPage() {
                 It will be live within 24 hours.
               </p>
               <Button asChild>
-                <a href="/">View All Jobs</a>
+                <Link href="/">View All Jobs</Link>
               </Button>
             </CardContent>
           </Card>
@@ -556,7 +555,7 @@ export default function PostJobPage() {
                   </p>
                 )}
                 <p className="text-sm text-gray-600 mt-1">
-                  This email will be used for applicant communications and won't be displayed publicly.
+                  This email will be used for applicant communications and won&apos;t be displayed publicly.
                 </p>
               </div>
             </CardContent>

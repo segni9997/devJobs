@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Briefcase, Github, Twitter, Linkedin, GitBranch, X, Code } from 'lucide-react';
+import { Github, Twitter, Linkedin, Code } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -20,10 +20,10 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <GitBranch className="h-5 w-5" />
+                <Github className="h-5 w-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <X className="h-5 w-5" />
+                <Twitter className="h-5 w-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <Linkedin className="h-5 w-5" />
