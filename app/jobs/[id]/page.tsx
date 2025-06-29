@@ -1,59 +1,44 @@
-import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-import { getJobById, getJobsByCompany } from '@/lib/data';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import JobCard from '@/components/jobCard';
-import { 
-  MapPin, 
-  Clock, 
-  DollarSign, 
-  Building2, 
-  Calendar,
-  ExternalLink,
-  Bookmark,
-  Share2,
-  ArrowLeft
-} from 'lucide-react';
+import { notFound } from "next/navigation"
+import Image from "next/image"
+import Link from "next/link"
+import { getJobById, getJobsByCompany } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import JobCard from "@/components/jobCard"
+import { MapPin, Clock, DollarSign, Building2, Calendar, ExternalLink, Bookmark, Share2, ArrowLeft } from "lucide-react"
 
 interface JobPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{
+    id: string
+  }>
 }
 
 export async function generateStaticParams() {
   // In a real app, you'd fetch all job IDs from your API/database
-  return [
-    { id: '1' },
-    { id: '2' },
-    { id: '3' },
-    { id: '4' },
-    { id: '5' },
-    { id: '6' },
-  ];
+  return [{ id: "1" }, { id: "2" }, { id: "3" }, { id: "4" }, { id: "5" }, { id: "6" }]
 }
 
-export default function JobPage({ params }: JobPageProps) {
-  const job = getJobById(params.id);
-  
+export default async function JobPage({ params }: JobPageProps) {
+  // Await the params promise
+  const { id } = await params
+  const job = getJobById(id)
+
   if (!job) {
-    notFound();
+    notFound()
   }
 
-  const relatedJobs = getJobsByCompany(job.companySlug).filter(j => j.id !== job.id);
+  const relatedJobs = getJobsByCompany(job.companySlug).filter((j) => j.id !== job.id)
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
+    const date = new Date(dateString)
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -68,39 +53,33 @@ export default function JobPage({ params }: JobPageProps) {
               </Link>
             </Button>
           </div>
-          
+
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
                 <div className="relative h-16 w-16 rounded-xl overflow-hidden bg-gray-100">
                   <Image
-                    src={job.companyLogo}
+                    src={job.companyLogo || "/placeholder.svg"}
                     alt={`${job.company} logo`}
                     fill
                     className="object-cover"
                   />
                 </div>
               </div>
-              
+
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
-                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
-                    {job.title}
-                  </h1>
-                  {job.featured && (
-                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500">
-                      Featured
-                    </Badge>
-                  )}
+                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">{job.title}</h1>
+                  {job.featured && <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500">Featured</Badge>}
                 </div>
-                
-                <Link 
+
+                <Link
                   href={`/companies/${job.companySlug}`}
                   className="text-lg text-blue-600 hover:text-blue-800 font-semibold"
                 >
                   {job.company}
                 </Link>
-                
+
                 <div className="flex flex-wrap items-center gap-4 mt-3 text-gray-600">
                   <div className="flex items-center space-x-1">
                     <MapPin className="h-4 w-4" />
@@ -114,7 +93,7 @@ export default function JobPage({ params }: JobPageProps) {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <Button variant="outline" size="sm">
                 <Bookmark className="h-4 w-4 mr-2" />
@@ -143,9 +122,7 @@ export default function JobPage({ params }: JobPageProps) {
                 <CardTitle>Job Description</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {job.description}
-                </p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{job.description}</p>
               </CardContent>
             </Card>
 
@@ -219,9 +196,9 @@ export default function JobPage({ params }: JobPageProps) {
                   </div>
                   <span className="font-semibold">{job.salary}</span>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 text-gray-600">
                     <Clock className="h-4 w-4" />
@@ -229,9 +206,9 @@ export default function JobPage({ params }: JobPageProps) {
                   </div>
                   <Badge variant="outline">{job.type}</Badge>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 text-gray-600">
                     <MapPin className="h-4 w-4" />
@@ -239,9 +216,9 @@ export default function JobPage({ params }: JobPageProps) {
                   </div>
                   <span className="font-semibold">{job.location}</span>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 text-gray-600">
                     <Calendar className="h-4 w-4" />
@@ -255,10 +232,7 @@ export default function JobPage({ params }: JobPageProps) {
             {/* Apply Button */}
             <Card>
               <CardContent className="pt-6">
-                <Button 
-                  size="lg" 
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 mb-4"
-                >
+                <Button size="lg" className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 mb-4">
                   Apply for this Position
                   <ExternalLink className="h-4 w-4 ml-2" />
                 </Button>
@@ -277,7 +251,7 @@ export default function JobPage({ params }: JobPageProps) {
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-gray-100">
                     <Image
-                      src={job.companyLogo}
+                      src={job.companyLogo || "/placeholder.svg"}
                       alt={`${job.company} logo`}
                       fill
                       className="object-cover"
@@ -291,11 +265,9 @@ export default function JobPage({ params }: JobPageProps) {
                     </div>
                   </div>
                 </div>
-                
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href={`/companies/${job.companySlug}`}>
-                    View Company Profile
-                  </Link>
+
+                <Button variant="outline" className="w-full bg-transparent" asChild>
+                  <Link href={`/companies/${job.companySlug}`}>View Company Profile</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -305,9 +277,7 @@ export default function JobPage({ params }: JobPageProps) {
         {/* Related Jobs */}
         {relatedJobs.length > 0 && (
           <div className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              More Jobs at {job.company}
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">More Jobs at {job.company}</h2>
             <div className="space-y-6">
               {relatedJobs.map((relatedJob) => (
                 <JobCard key={relatedJob.id} job={relatedJob} />
@@ -317,5 +287,5 @@ export default function JobPage({ params }: JobPageProps) {
         )}
       </div>
     </div>
-  );
+  )
 }
